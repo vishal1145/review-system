@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex justify-center items-center h-screen bg-indigo-600">
+        <div class="w-96 p-6 shadow-lg bg-white rounded-md" id="loginForm">
+            <h1 class="text-3xl block text-center font-semibold text-indigo-700"><i class="fa-solid fa-user"></i> Login</h1>
+            <hr class="mt-3 mb-5">
+            
+            <!-- Email Input -->
+            <div class="mt-3">
+                <label for="email" class="block text-base mb-2">Email</label>
+                <input type="email" id="email" class="border w-full text-base px-3 py-2 focus:outline-none focus:ring-0 focus:border-indigo-600" placeholder="Enter Email..." required />
+            </div>
+
+            <!-- Password Input -->
+            <div class="mt-3">
+                <label for="password" class="block text-base mb-2">Password</label>
+                <input type="password" id="password" class="border w-full text-base px-3 py-2 focus:outline-none focus:ring-0 focus:border-indigo-600" placeholder="Enter Password..." required />
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="mt-3 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="rememberMe" class="h-4 w-4 text-indigo-600">
+                    <label for="rememberMe" class="text-sm">Remember Me</label>
+                </div>
+                <div>
+                    <a href="/login/forgot_pass/" class="text-indigo-800 font-semibold text-sm">Forgot Password?</a>
+
+                </div>
+            </div>
+
+            <!-- Login Button -->
+            <div class="mt-5">
+                <button type="button" class="border-2 border-indigo-700 bg-indigo-700 text-white py-2 w-full rounded-md hover:bg-transparent hover:text-indigo-700 font-semibold transition" onclick="loginUser()">
+                    <i class="fa-solid fa-right-to-bracket"></i>&nbsp;&nbsp;Login
+                </button>
+            </div>
+
+            <!-- Sign Up Link -->
+            <div class="mt-6 text-center">
+                <p class="text-sm">Don't have an account? <a href="#" class="text-indigo-800 font-semibold" onclick="toggleSignUp()">Sign Up</a></p>
+            </div>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div class="w-96 p-6 shadow-lg bg-white rounded-md hidden" id="signUpForm">
+            <h1 class="text-3xl block text-center font-semibold text-indigo-700">Sign Up</h1>
+            <hr class="mt-3 mb-5">
+            
+            <!-- New Email Input -->
+            <div class="mt-3">
+                <label for="newEmail" class="block text-base mb-2">Email</label>
+                <input type="email" id="newEmail" class="border w-full text-base px-3 py-2 focus:outline-none focus:ring-0 focus:border-indigo-600" placeholder="Enter Email..." required />
+            </div>
+
+            <!-- New Password Input -->
+            <div class="mt-3">
+                <label for="newPassword" class="block text-base mb-2">Password</label>
+                <input type="password" id="newPassword" class="border w-full text-base px-3 py-2 focus:outline-none focus:ring-0 focus:border-indigo-600" placeholder="Enter Password..." required />
+            </div>
+
+            <!-- Sign Up Button -->
+            <div class="mt-5">
+                <button type="button" class="border-2 border-indigo-700 bg-indigo-700 text-white py-2 w-full rounded-md hover:bg-transparent hover:text-indigo-700 font-semibold transition" onclick="registerUser()">
+                    <i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Sign Up
+                </button>
+            </div>
+
+            <!-- Login Link -->
+            <div class="mt-6 text-center">
+                <p class="text-sm">Already have an account? <a href="#" class="text-indigo-800 font-semibold" onclick="toggleSignUp()">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://127.0.0.1:8000'; 
+
+        window.onload = function() {
+            const rememberedEmail = localStorage.getItem('rememberedEmail');
+            if (rememberedEmail) {
+                document.getElementById('email').value = rememberedEmail; 
+                document.getElementById('rememberMe').checked = true; 
+            }
+        };
+
+        function toggleSignUp() {
+            const loginForm = document.getElementById('loginForm');
+            const signUpForm = document.getElementById('signUpForm');
+            loginForm.classList.toggle('hidden');
+            signUpForm.classList.toggle('hidden');
+        }
+
+        async function registerUser() {
+            const email = document.getElementById('newEmail').value;
+            const password = document.getElementById('newPassword').value;
+
+            const response = await fetch(`${apiUrl}/register/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                toggleSignUp();  
+            } else {
+                alert(JSON.stringify(data.errors));
+            }
+        }
+
+        async function loginUser() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;  
+            const rememberMe = document.getElementById('rememberMe').checked; // Get the checkbox state
+            const response = await fetch(`${apiUrl}/login/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                // Save email to local storage if Remember Me is checked
+                if (rememberMe) {
+                   localStorage.setItem('rememberedEmail', email);
+                } else {
+                   localStorage.removeItem('rememberedEmail'); // Clear if not checked
+                }
+                window.location.href = 'home.html';  
+            } else {
+                alert(data.error);
+            }
+        }
+    </script>
+
+</body>
+</html>

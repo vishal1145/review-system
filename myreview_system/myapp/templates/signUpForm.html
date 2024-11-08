@@ -1,0 +1,18 @@
+<div class="w-96 p-6 shadow-lg bg-white rounded-md hidden" id="signUpForm">
+    <h1 class="text-3xl text-center font-semibold">Sign Up</h1>
+    <hr class="mt-3">
+    <div class="mt-3">
+        <label for="newEmail" class="block mb-2">Email</label>
+        <input type="email" id="newEmail" class="border w-full px-2 py-1" placeholder="Enter Email..." required>
+    </div>
+    <div class="mt-3">
+        <label for="newPassword" class="block mb-2">Password</label>
+        <input type="password" id="newPassword" class="border w-full px-2 py-1" placeholder="Enter Password..." required>
+    </div>
+    <div class="mt-5">
+        <button class="w-full py-1 bg-indigo-700 text-white hover:bg-transparent hover:text-indigo-700 border-2 rounded-md font-semibold" onclick="registerUser()"><i class="fa-solid fa-user-plus"></i> Sign Up</button>
+    </div>
+    <div class="mt-6 text-center">
+        <p>Already have an account? <a href="#" class="text-indigo-800" onclick="toggleSignUp()">Login</a></p>
+    </div>
+</div>
